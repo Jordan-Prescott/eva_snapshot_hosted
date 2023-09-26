@@ -2,6 +2,7 @@ import argparse
 import logging
 import ast
 from logging.handlers import SysLogHandler
+
 from utils import files
 from utils.poly_api import PolyApi
 from utils.parsing import flow_module, GraphvizModule, UniverseGraphVizModule
@@ -9,9 +10,19 @@ from utils.store.data_store import DataStore
 
 PAPERTRAIL = ("logs3.papertrailapp.com", 32517)
 
+CUSTOMER_EMAIL = ""
+SITE_CODE = ""
+ACCOUNT_ID = ""
+PROJECT_ID = ""
+API_URL = ""
+API_TOKEN = ""
+
 OUTPUT_FOLDER = "./output/"
 PROJECT_FOLDER = "./input/project_download"
 PROJECT_DOWNLOAD_NAME = "project_download.zip"
+
+# Each file is critical to the output of the script, read README for more details. List populated in args.
+CORE_FILES = []
 
 # List of files that are used in the programming of EVA but not needed in output and therefore avoided.
 FILES_NOT_NEEDED = [
@@ -23,6 +34,18 @@ FILES_NOT_NEEDED = [
 def main():
     """main method that manages user input and orchestrates programs operations.
     """
+
+    print(CUSTOMER_EMAIL)
+    print(SITE_CODE)
+    print(ACCOUNT_ID)
+    print(PROJECT_ID)
+    print(API_URL)
+    print(API_TOKEN)
+
+    print(CORE_FILES[0])
+    print(CORE_FILES[1])
+
+    exit()
     
     api = PolyApi(ACCOUNT_ID, PROJECT_ID)
 
@@ -114,41 +137,57 @@ if __name__ == '__main__':
     author: Jordan Prescott
     support: aisupport@fourteenip.com
     
-    gitHub: https://github.com/Jordan-Prescott/EVASnapshot-uni
+    gitHub: https://github.com/Jordan-Prescott/eva_snapshot_hosted
     """
 
-    # This code is designed for server side - uncomment in phase 2
-    # parser = argparse.ArgumentParser(
-    #     description="""Generate visual call flows for ACCOUNT_ID and PROJECT_ID passed in.
-    #     Stores USERNAME and SITE_CODE for log."""
-    # )
-    # parser.add_argument(
-    #     "--USERNAME",
-    #     help="USERNAME for log",
-    #     required=False
-    # )
-    # parser.add_argument(
-    #     "--SITE_CODE",
-    #     help="target site code for output",
-    #     required=False
-    # )
-    # parser.add_argument(
-    #     "--ACCOUNT_ID",
-    #     help="account id site is hosted under in PolyAI platform",
-    #     required=False
-    # )
-    # parser.add_argument(
-    #     "--PROJECT_ID",
-    #     help="project id of the project in PolyAI platform",
-    #     required=False
-    # )
-    #
-    # # capture arguments passed in
-    # args = parser.parse_args()
-    # USERNAME = args.USERNAME
-    # SITE_CODE = args.SITE_CODE
-    # ACCOUNT_ID = args.ACCOUNT_ID
-    # PROJECT_ID = args.PROJECT_ID
+    parser = argparse.ArgumentParser(
+        description="""Generate visual call flows for ACCOUNT_ID and PROJECT_ID passed in.
+        Stores USERNAME and SITE_CODE for log."""
+    )
+    parser.add_argument(
+        "--CUSTOMER_EMAIL",
+        help="USERNAME for log",
+        required=False
+    )
+    parser.add_argument(
+        "--SITE_CODE",
+        help="target site code for output",
+        required=False
+    )
+    parser.add_argument(
+        "--ACCOUNT_ID",
+        help="account id site is hosted under in PolyAI platform",
+        required=False
+    )
+    parser.add_argument(
+        "--PROJECT_ID",
+        help="project id of the project in PolyAI platform",
+        required=False
+    )
+    parser.add_argument(
+        "--API_URL",
+        help="Base url of API to download project backup.",
+        required=False
+    ) 
+    parser.add_argument(
+        "--API_TOKEN",
+        help="API token needed to authenticate and request project.",
+        required=False
+    )
+    
+    # capture arguments passed in
+    args = parser.parse_args()
+    CUSTOMER_EMAIL = args.CUSTOMER_EMAIL
+    SITE_CODE = args.SITE_CODE
+    ACCOUNT_ID = args.ACCOUNT_ID
+    PROJECT_ID = args.PROJECT_ID
+    API_URL = args.API_URL
+    API_TOKEN = args.API_TOKEN
+
+    CORE_FILES.append(f"./input/project_download/data_store/live/{SITE_CODE.lower()}/handoff")
+    CORE_FILES.append(f"./input/project_download/data_store/live/{SITE_CODE.lower()}/sms_content_map")
+    CORE_FILES.append("./input/project_download/agent_configuration/domain/variants.yaml")
+    CORE_FILES.append("./input/project_download/agent_configuration/domain/utterances.en-US.yaml")
 
     # setup logging
     logger = logging.getLogger("EVASnapshot v2")
@@ -159,22 +198,8 @@ if __name__ == '__main__':
     handler = SysLogHandler(address=(PAPERTRAIL[0], PAPERTRAIL[1]))
     handler.setFormatter(formatter)
     logger.addHandler(handler)
-
-    print("EVASnapshot v2\n")
     
-    USERNAME = input("Username: ")
-    SITE_CODE = input("Site Code: ")
-    ACCOUNT_ID = input("Account ID: ")
-    PROJECT_ID = input("Project ID: ")
-    logger.info(f"USERNAME: {USERNAME}, SITE_CODE: {SITE_CODE}, ACCOUNT ID: {ACCOUNT_ID}, PROJECT ID: {PROJECT_ID}")
-
-    # Each script is critical to the output of the script. Read README for more details
-    CORE_FILES = [
-        f"./input/project_download/data_store/live/{SITE_CODE.lower()}/handoff",
-        f"./input/project_download/data_store/live/{SITE_CODE.lower()}/sms_content_map",
-        "./input/project_download/agent_configuration/domain/variants.yaml",
-        "./input/project_download/agent_configuration/domain/utterances.en-US.yaml"
-    ]
-
+    logger.info(f"CUSTOMER_EMAIL: {CUSTOMER_EMAIL}, SITE_CODE: {SITE_CODE}, ACCOUNT ID: {ACCOUNT_ID}, PROJECT ID: {PROJECT_ID}")
+   
     main()
-    print("\nScript End.")
+    print("\nThe End.")
