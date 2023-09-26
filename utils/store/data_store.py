@@ -1,7 +1,7 @@
 import logging
 
 from utils import files
-from store.data_entities import Variant
+from utils.store.data_entities import Variant
 
 LOGGER = logging.getLogger("EVASnapshot v2")
 

@@ -3,7 +3,7 @@ import logging
 import re
 import graphviz
 
-from store.data_entities import Node, Flow
+from utils.store.data_entities import Node, Flow
 
 LOGGER = logging.getLogger("EVASnapshot v2")
 DEFAULT_CONDITION = "_DEFAULT_CONDITION"
