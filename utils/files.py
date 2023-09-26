@@ -10,30 +10,6 @@ from datetime import date
 LOGGER = logging.getLogger("EVASnapshot v2")
 TODAY = date.today().strftime("%d.%m.%Y")
 
-
-def program_cleanup(project_folder, output_folder, archive_folder) -> bool:
-    """Removes the previous download from the input folder and moves the previous output to the archive folder
-    for backups. This cleans the folders of files that will affect the script if left by user.
-
-    :param project_folder: Root folder api download
-    :param output_folder: Folder the script outputs generated files to
-    :param archive_folder: Archived storage of previous runs of script
-    :return: True to indicate complete
-    """
-
-    try:
-        shutil.rmtree(project_folder)  # remove previous download
-    except FileNotFoundError:  # file already removed
-        LOGGER.error(f"{project_folder} FileNotFoundError: May already have been removed")
-        pass
-
-    for file in os.listdir(output_folder):  # move previous output to archive
-        shutil.move(output_folder + file, archive_folder)
-
-    LOGGER.info(f"program_cleanup end.")
-    return True
-
-
 def unpack_project_download(download, project_folder, project_zipped) -> bool:
     """Stores the contents of the download to the local file system. First unzips and stores and then
     deletes zipped folder.
