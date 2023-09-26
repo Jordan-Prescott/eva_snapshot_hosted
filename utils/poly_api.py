@@ -7,7 +7,7 @@ LOGGER = logging.getLogger("EVASnapshot v2")
 
 class PolyApi:
     api_key = ("x-api-key", os.environ.get('POLY_API_KEY'))  # tuple type to stop editing
-    url = "https://api.us-1.platform.polyai.app/v1/"
+    url = ""
 
     __instance = None
 
