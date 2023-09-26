@@ -11,7 +11,6 @@ PAPERTRAIL = ("logs3.papertrailapp.com", 32517)
 
 OUTPUT_FOLDER = "./output/"
 PROJECT_FOLDER = "./input/project_download"
-ARCHIVE_FOLDER = "./lib/archive/"
 PROJECT_DOWNLOAD_NAME = "project_download.zip"
 
 # List of files that are used in the programming of EVA but not needed in output and therefore avoided.
@@ -25,7 +24,6 @@ def main():
     """main method that manages user input and orchestrates programs operations.
     """
     
-    files.program_cleanup(PROJECT_FOLDER, OUTPUT_FOLDER, ARCHIVE_FOLDER)
     api = PolyApi(ACCOUNT_ID, PROJECT_ID)
 
     download = api.download_project()
