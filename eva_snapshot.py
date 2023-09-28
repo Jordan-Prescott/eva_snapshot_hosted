@@ -37,11 +37,6 @@ def main():
     """
     api = PolyApi(API_URL, API_TOKEN, ACCOUNT_ID, PROJECT_ID)
     download = api.download_project()
-
-    # checks project was downloaded
-    if download is False:
-        raise EVASHApiCallFail
-
     files.unpack_project_download(download, PROJECT_FOLDER, PROJECT_DOWNLOAD_NAME)
 
     # checks core files are found
@@ -49,10 +44,9 @@ def main():
         files.check_file_exists(path)
 
     store = DataStore(SITE_CODE, CORE_FILES, FILES_NOT_NEEDED)
-    print("Core files loaded.")
+
 
     flows = []
-
     # parsing python files appending complete flow to flows[]
     for active_flow in store.variant.flows:
         location = "policy/"  # Highest folder in directory
@@ -75,19 +69,16 @@ def main():
 
             if not ast_mod is None:
                 flows.append(ast_mod)
-    print("File parsing complete.")
 
     # generate outputs
     # Makes dir as well as copy over media files for output
     uni = UniverseGraphVizModule()
-    files.copy_files_to_dest(source_dir="./lib/media/output_media/", target_dir=f"{OUTPUT_FOLDER}{SITE_CODE}/")
+    files.copy_files_to_dest(source_dir="./data/output_media/", target_dir=f"{OUTPUT_FOLDER}{SITE_CODE}/")
     for flow in flows:
         flow_chart = GraphvizModule(flow, f"{OUTPUT_FOLDER}{SITE_CODE}/", store)
         uni.graphs.append(flow_chart.dot)
-    print("Single flow files generated.")
 
     uni.build_universe(f"{OUTPUT_FOLDER}{SITE_CODE}/")
-    print("Universe file generated.")
 
 
 if __name__ == '__main__':
