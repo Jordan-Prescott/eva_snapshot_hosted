@@ -3,6 +3,7 @@ import logging
 import ast
 from logging.handlers import SysLogHandler
 
+from utils.exceptions import *
 from utils import files
 from utils.poly_api import PolyApi
 from utils.parsing import flow_module, GraphvizModule, UniverseGraphVizModule
@@ -34,60 +35,18 @@ FILES_NOT_NEEDED = [
 def main():
     """main method that manages user input and orchestrates programs operations.
     """
-
-    print(CUSTOMER_EMAIL)
-    print(SITE_CODE)
-    print(ACCOUNT_ID)
-    print(PROJECT_ID)
-    print(API_URL)
-    print(API_TOKEN)
-
-    print(CORE_FILES[0])
-    print(CORE_FILES[1])
-
-    exit()
-    
-    api = PolyApi(ACCOUNT_ID, PROJECT_ID)
-
+    api = PolyApi(API_URL, API_TOKEN, ACCOUNT_ID, PROJECT_ID)
     download = api.download_project()
-    # TODO: Review this code if its the best way to achieve this
-    if download is False:
-        logger.error("1/2 API call failed")
-        print(f"""
-        ERROR: API call unsuccessful with Account ID: {ACCOUNT_ID} and Project ID: {PROJECT_ID}.
-        Please review and enter again.\n""")
-        api.ACCOUNT_ID = input("Enter Account ID: ")
-        api.PROJECT_ID = input("Enter Project ID: ")
 
-        download = api.download_project()
-        if download is False:
-            logger.critical("2/2 API call failed")
-            print("""
-            ERROR: API call failed again. This means either details you are entering are incorrect OR PolyAI's
-            API is having issues. Please investigate and run script again.\n""")
-            exit()
+    # checks project was downloaded
+    if download is False:
+        raise EVASHApiCallFail
 
     files.unpack_project_download(download, PROJECT_FOLDER, PROJECT_DOWNLOAD_NAME)
 
-    for index, path in enumerate(CORE_FILES):
-        # TODO: Review this code if its the best way to achieve this
-        if not files.check_file_exists(path):
-            logger.error(f"1/2 file checks failed: {path}")
-            print(f"""
-                    ERROR: The file located at {path} could not be found.
-                    Please review and enter the correct path.\n""")
-            path = input("Enter Correct Path: ")
-
-            if not files.check_file_exists(path):
-                logger.critical(f"2/2 file checks failed: {path}")
-                print(f"""
-                ERROR: The file located at {path} could not be found. The script needs this file to build the generate
-                the output. Please check the ./input/project_download as well as the PolyAI studio. The script downloads
-                this file structure from the studio so you will encounter this issue again when running the script but
-                knowing the path you can amend in the above.\n""")
-                exit()
-            else:
-                CORE_FILES[index] = path
+    # checks core files are found
+    for path in CORE_FILES.values():
+        files.check_file_exists(path)
 
     store = DataStore(SITE_CODE, CORE_FILES, FILES_NOT_NEEDED)
     print("Core files loaded.")
