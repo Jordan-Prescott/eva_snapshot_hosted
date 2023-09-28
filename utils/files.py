@@ -7,6 +7,8 @@ import logging
 from typing import Dict
 from datetime import date
 
+from utils.exceptions import *
+
 LOGGER = logging.getLogger("EVASnapshot v2")
 TODAY = date.today().strftime("%d.%m.%Y")
 
@@ -35,14 +37,13 @@ def check_file_exists(path) -> bool:
     """Takes a path to a file and checks the file exists.
 
     :param path: Path to the file the function checks exists.
-    :return: Returns True is file exist and False if not.
+    :return: Returns True is file exist and rasies EVASHFilesNotLoaded.
     """
     if os.path.exists(path):
         return True
     if not os.path.exists(path):
-        LOGGER.error(f"check_file_exists: {path} does not exist.")
-        False
-    LOGGER.info(f"check_file_exists end.")
+        LOGGER.critical(f"Core file not found at path: {path}")
+        raise EVASHFilesNotLoaded
 
 
 def load_json_data_from_file(path) -> Dict:

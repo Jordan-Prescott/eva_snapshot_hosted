@@ -2,12 +2,13 @@ import requests
 import logging
 import json
 import os
+
+from utils.exceptions import *
+
 LOGGER = logging.getLogger("EVASnapshot v2")
 
 
 class PolyApi:
-    api_key = ("x-api-key", os.environ.get('POLY_API_KEY'))  # tuple type to stop editing
-    url = ""
 
     __instance = None
 
@@ -17,7 +18,7 @@ class PolyApi:
             PolyApi("account_id", "project_id")
         return PolyApi.__instance
 
-    def __init__(self, account_id: str, project_id: str) -> None:
+    def __init__(self, url: str, token: str, account_id: str, project_id: str) -> None:
         """Api object used to make REST based calls to PolyAI's API.
 
         :param account_id: account_id (string) account id associated with 14IPs account in PolyAI
@@ -26,8 +27,9 @@ class PolyApi:
         if PolyApi.__instance is not None:
             raise Exception("Singleton cannot be instantiated more than once.")
         else:
+            self.url = url
             self.payload = {}
-            self.headers = {self.api_key[0]: self.api_key[1]}  # collects key from tuple
+            self.headers = {"x-api-key": token}  # collects key from tuple
             self.account_id = account_id
             self.project_id = project_id
 
@@ -44,11 +46,9 @@ class PolyApi:
         endpoint_url = f"{self.url}{self.account_id}/{self.project_id}/projects/zip"
         response = requests.get(endpoint_url, headers=self.headers)
 
-        if response.status_code == 200:  # call successful
+        if response.status_code == 200:  
             LOGGER.info(f"download_project: API call successful")
-            print("\nProject files successfully downloaded.")
             return response
-        else:  # call failed
-            # TODO: Give detail of failure when poly build it in
-            LOGGER.critical(f"download_project: API call failed")
-            return False
+        else:  
+            LOGGER.critical(f"API call failed to download project.")
+            raise EVASHApiCallFail
