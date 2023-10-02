@@ -96,3 +96,12 @@ def copy_files_to_dest(source_dir, target_dir) -> bool:
 
     shutil.copytree(source_dir, target_dir)
     return True
+
+def remove_folder(path):
+    """takes in path to folder which will be removed if found and path given is a direactory.
+    If path given an error will be raised to indicate path cant be found. 
+    """
+
+
+     shutil.rmtree(path)
+    
