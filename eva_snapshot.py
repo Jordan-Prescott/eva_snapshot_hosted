@@ -45,7 +45,6 @@ def main():
 
     store = DataStore(SITE_CODE, CORE_FILES, FILES_NOT_NEEDED)
 
-
     flows = []
     # parsing python files appending complete flow to flows[]
     for active_flow in store.variant.flows:
@@ -79,6 +78,8 @@ def main():
         uni.graphs.append(flow_chart.dot)
 
     uni.build_universe(f"{OUTPUT_FOLDER}{SITE_CODE}/")
+
+    
 
 
 if __name__ == '__main__':
@@ -134,6 +135,7 @@ if __name__ == '__main__':
     API_URL = args.API_URL
     API_TOKEN = args.API_TOKEN
 
+    # populate core files
     CORE_FILES.append(f"./input/project_download/data_store/live/{SITE_CODE.lower()}/handoff")
     CORE_FILES.append(f"./input/project_download/data_store/live/{SITE_CODE.lower()}/sms_content_map")
     CORE_FILES.append("./input/project_download/agent_configuration/domain/variants.yaml")

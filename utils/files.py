@@ -103,5 +103,5 @@ def remove_folder(path):
     """
 
 
-     shutil.rmtree(path)
+    shutil.rmtree(path)
     

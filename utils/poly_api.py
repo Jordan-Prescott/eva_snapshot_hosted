@@ -40,7 +40,7 @@ class PolyApi:
         """makes GET call to PolyAI API to download project. Return files if call was successful and False if
         un-successful.
 
-        :return: Either contents of downloaded program if call was successful or False if the call failed.
+        :return: Either contents of downloaded program if call was successful or raise EVASHApiCallFail.
         """
 
         endpoint_url = f"{self.url}{self.account_id}/{self.project_id}/projects/zip"
