@@ -79,8 +79,7 @@ def main():
 
     uni.build_universe(f"{OUTPUT_FOLDER}{SITE_CODE}/")
 
-    
-
+    files.remove_folder(PROJECT_FOLDER)
 
 if __name__ == '__main__':
     """
