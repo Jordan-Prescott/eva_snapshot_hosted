@@ -7,7 +7,7 @@ import logging
 from typing import Dict
 from datetime import date
 
-from utils.exceptions import *
+from eva_snapshot.utils.exceptions import *
 
 LOGGER = logging.getLogger("EVASnapshot v2")
 TODAY = date.today().strftime("%d.%m.%Y")

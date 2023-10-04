@@ -3,7 +3,7 @@ import logging
 import json
 import os
 
-from utils.exceptions import *
+from eva_snapshot.utils.exceptions import *
 
 LOGGER = logging.getLogger("EVASnapshot v2")
 

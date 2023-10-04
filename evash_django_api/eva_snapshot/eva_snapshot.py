@@ -3,11 +3,11 @@ import logging
 import ast
 from logging.handlers import SysLogHandler
 
-from utils.exceptions import *
-from utils import files
-from utils.poly_api import PolyApi
-from utils.parsing import flow_module, GraphvizModule, UniverseGraphVizModule
-from utils.store.data_store import DataStore
+from eva_snapshot.utils.exceptions import *
+from eva_snapshot.utils import files
+from eva_snapshot.utils.poly_api import PolyApi
+from eva_snapshot.utils.parsing import flow_module, GraphvizModule, UniverseGraphVizModule
+from eva_snapshot.utils.store.data_store import DataStore
 
 PAPERTRAIL = ("logs3.papertrailapp.com", 32517)
 
