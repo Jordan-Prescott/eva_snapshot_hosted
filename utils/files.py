@@ -102,6 +102,8 @@ def remove_folder(path):
     If path given an error will be raised to indicate path cant be found. 
     """
 
-
-    shutil.rmtree(path)
+    if os.path.exists(path) and os.path.isdir(path):
+        shutil.rmtree(path)
+    else: 
+        raise EVASHFolderNotFound
     
