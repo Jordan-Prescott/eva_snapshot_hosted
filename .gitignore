@@ -163,6 +163,8 @@ cython_debug/
 .DS_Store
 
 # application IO
-input/*
+/input/*
+/output/*
 evash_django_api/eva_snapshot/input/*
+evash_django_api/eva_snapshot/output/*
 sandbox.py
