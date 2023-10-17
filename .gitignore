@@ -164,4 +164,5 @@ cython_debug/
 
 # application IO
 input/*
+evash_django_api/eva_snapshot/input/*
 sandbox.py
