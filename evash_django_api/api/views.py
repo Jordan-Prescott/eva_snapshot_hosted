@@ -3,6 +3,8 @@ from rest_framework.decorators import api_view
 from django.http import HttpResponse
 import zipfile
 
+from eva_snapshot.eva_snapshot import main as es
+
 import os
 
 #TODO: Need a new view for authentication
@@ -20,13 +22,20 @@ def getData(request):
     account_id = request.GET.get('account_id', None)
     project_id = request.GET.get('project_id', None)
     group_id = request.GET.get('group_id', None)
+    region = request.GET.get('region', None)
 
+    # check params
     if account_id == None or account_id == '':
         return HttpResponse('Error: no account_id specified')
     elif project_id == None or project_id == '':
         return HttpResponse('Error: no project_id specified')
     elif group_id == None or group_id == '':
             return HttpResponse('Error: no group_id specified')
+    elif region == None or region == '':
+            return HttpResponse('Error: no region specified')
+    
+    # run eva snapshot script
+    es(account_id, project_id, group_id, region)
     
     """
     AUTH first of course
