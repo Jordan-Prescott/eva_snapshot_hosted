@@ -23,6 +23,7 @@ def getData(request):
     project_id = request.GET.get('project_id', None)
     group_id = request.GET.get('group_id', None)
     region = request.GET.get('region', None)
+    customer_email = request.GET.get('email', None)
 
     # check params
     if account_id == None or account_id == '':
@@ -33,9 +34,12 @@ def getData(request):
             return HttpResponse('Error: no group_id specified')
     elif region == None or region == '':
             return HttpResponse('Error: no region specified')
+    elif customer_email == None or customer_email == '':
+            return HttpResponse('Error: no customer_email specified')
+
     
     # run eva snapshot script
-    es(account_id, project_id, group_id, region)
+    es(account_id, project_id, group_id, region, customer_email)
     
     """
     AUTH first of course
@@ -43,7 +47,9 @@ def getData(request):
     1. Run EVASnapshot
     2. Collect files and zip
     3. Send 
+    4. Remove files 
     """
+
 
 
     # buffer = BytesIO()
