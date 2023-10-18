@@ -15,16 +15,16 @@ class PolyApi:
         :param account_id: account_id (string) account id associated with 14IPs account in PolyAI
         :param project_id: project id associated with the project(brand: Marriott) in PolyAI
         """
-
+        self.url = 'https://api.us-1.platform.polyai.app/v1/'
         if region == 'EU':
             self.url = ''
-        else: 
-            self.url = 'https://api.us-1.platform.polyai.app/v1/'
 
         self.payload = {}
-        self.headers = {"x-api-key": os.getenv(account_id)}  # collects key from tuple  
+        self.headers = {"x-api-key": os.getenv('"' + account_id +'"')}  # collects key from tuple  
         self.account_id = account_id
         self.project_id = project_id
+
+        print(self.headers)
 
 
     def download_project(self):

@@ -11,8 +11,8 @@ class EVASHApiCallFail(EVASHError):
     """
 
     def __str__(self) -> str:
-        return f"Failed to download project export in API. Please check URL, token,\
-project_id, and account_id."
+        return f"Failed to download project export in API. Please account_id, project_id, \
+region, and group_id"
 
 class EVASHFilesNotLoaded(EVASHError):
     """Core files needed to generate output have not been found.
