@@ -17,7 +17,16 @@ def getData(request):
     :param group_id:
     """
     # this will return a zip file with snapshot output.
+    account_id = request.GET.get('account_id', None)
+    project_id = request.GET.get('project_id', None)
+    group_id = request.GET.get('group_id', None)
 
+    if account_id == None or account_id == '':
+        return HttpResponse('Error: no account_id specified')
+    elif project_id == None or project_id == '':
+        return HttpResponse('Error: no project_id specified')
+    elif group_id == None or group_id == '':
+            return HttpResponse('Error: no group_id specified')
     
     """
     AUTH first of course
@@ -28,21 +37,24 @@ def getData(request):
     """
 
 
-    buffer = BytesIO()
-    folder_path = './eva_snapshot/output/'
-    files = os.listdir(folder_path)
+    # buffer = BytesIO()
+    # folder_path = './eva_snapshot/output/'
+    # files = os.listdir(folder_path)
 
-    with zipfile.ZipFile(buffer, 'w') as zipf:
-        for file in files:
-            if os.path.isfile(os.path.join(folder_path, file)):
-                zipf.write(os.path.join(folder_path, file), file)
+    # with zipfile.ZipFile(buffer, 'w') as zipf:
+    #     for file in files:
+    #         if os.path.isfile(os.path.join(folder_path, file)):
+    #             zipf.write(os.path.join(folder_path, file), file)
  
-    buffer.seek(0)
+    # buffer.seek(0)
 
-    # Create an HttpResponse with the zip file as content
-    response = HttpResponse(buffer.read(), content_type='application/zip')
+    # # Create an HttpResponse with the zip file as content
+    # response = HttpResponse(buffer.read(), content_type='application/zip')
     
-    # Set the Content-Disposition header to prompt the user to download the file
-    response['Content-Disposition'] = 'attachment; filename="eva.zip"'
+    # # Set the Content-Disposition header to prompt the user to download the file
+    # #TODO: insert date in zip name
+    # response['Content-Disposition'] = 'attachment; filename="eva_snaphot.zip"'
     
-    return response
+    # return response
+
+    return HttpResponse(f'Group id is: {group_id}')
