@@ -11,13 +11,6 @@ from eva_snapshot.utils.store.data_store import DataStore
 
 PAPERTRAIL = ("logs3.papertrailapp.com", 32517)
 
-CUSTOMER_EMAIL = ""
-SITE_CODE = ""
-ACCOUNT_ID = ""
-PROJECT_ID = ""
-API_URL = ""
-API_TOKEN = ""
-
 OUTPUT_FOLDER = "./output/"
 PROJECT_FOLDER = "./input/project_download"
 PROJECT_DOWNLOAD_NAME = "project_download.zip"
@@ -32,7 +25,7 @@ FILES_NOT_NEEDED = [
 ]
 
 
-def main(account_id, project_id, group_id, region):
+def main(account_id, project_id, group_id, region, customer_email):
     """
     company: FourteenIP Communications
     author: Jordan Prescott
@@ -54,15 +47,14 @@ def main(account_id, project_id, group_id, region):
     handler.setFormatter(formatter)
     logger.addHandler(handler)
     
-    logger.info(f"CUSTOMER_EMAIL: {CUSTOMER_EMAIL}, SITE_CODE: {SITE_CODE}, ACCOUNT ID: {ACCOUNT_ID}, PROJECT ID: {PROJECT_ID}")
+    logger.info(f"CUSTOMER EMAIL: {customer_email}, GROUP ID: {group_id}, ACCOUNT ID: {account_id}, PROJECT ID: {project_id}")
    
-
     CORE_FILES.append(f"./input/project_download/data_store/live/{group_id.lower()}/handoff")
     CORE_FILES.append(f"./input/project_download/data_store/live/{group_id.lower()}/sms_content_map")
     CORE_FILES.append("./input/project_download/agent_configuration/domain/variants.yaml")
     CORE_FILES.append("./input/project_download/agent_configuration/domain/utterances.en-US.yaml")
 
-    api = PolyApi(API_URL, API_TOKEN, ACCOUNT_ID, PROJECT_ID)
+    api = PolyApi(region, account_id, project_id)
     download = api.download_project()
     files.unpack_project_download(download, PROJECT_FOLDER, PROJECT_DOWNLOAD_NAME)
 
@@ -70,7 +62,7 @@ def main(account_id, project_id, group_id, region):
     for path in CORE_FILES.values():
         files.check_file_exists(path)
 
-    store = DataStore(SITE_CODE, CORE_FILES, FILES_NOT_NEEDED)
+    store = DataStore(group_id, CORE_FILES, FILES_NOT_NEEDED)
 
     flows = []
     # parsing python files appending complete flow to flows[]
@@ -99,11 +91,9 @@ def main(account_id, project_id, group_id, region):
     # generate outputs
     # Makes dir as well as copy over media files for output
     uni = UniverseGraphVizModule()
-    files.copy_files_to_dest(source_dir="./data/output_media/", target_dir=f"{OUTPUT_FOLDER}{SITE_CODE}/")
+    files.copy_files_to_dest(source_dir="./data/output_media/", target_dir=f"{OUTPUT_FOLDER}{group_id}/")
     for flow in flows:
-        flow_chart = GraphvizModule(flow, f"{OUTPUT_FOLDER}{SITE_CODE}/", store)
+        flow_chart = GraphvizModule(flow, f"{OUTPUT_FOLDER}{group_id}/", store)
         uni.graphs.append(flow_chart.dot)
 
-    uni.build_universe(f"{OUTPUT_FOLDER}{SITE_CODE}/")
-
-    files.remove_folder(PROJECT_FOLDER)
+    uni.build_universe(f"{OUTPUT_FOLDER}{group_id}/")

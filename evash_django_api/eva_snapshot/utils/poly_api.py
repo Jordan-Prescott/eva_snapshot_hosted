@@ -11,14 +11,14 @@ LOGGER = logging.getLogger("EVASnapshot v2")
 class PolyApi:
 
     __instance = None
-
+ 
     @staticmethod
     def get_instance():
         if PolyApi.__instance is None:
             PolyApi("account_id", "project_id")
         return PolyApi.__instance
 
-    def __init__(self, url: str, token: str, account_id: str, project_id: str) -> None:
+    def __init__(self, region, account_id, project_id) -> None:
         """Api object used to make REST based calls to PolyAI's API.
 
         :param account_id: account_id (string) account id associated with 14IPs account in PolyAI
@@ -27,9 +27,13 @@ class PolyApi:
         if PolyApi.__instance is not None:
             raise Exception("Singleton cannot be instantiated more than once.")
         else:
-            self.url = url
+            if region == 'EU':
+                self.url = ''
+            else: 
+                self.url = 'https://api.us-1.platform.polyai.app/v1/'
+
             self.payload = {}
-            self.headers = {"x-api-key": token}  # collects key from tuple
+            self.headers = {"x-api-key": os.getenv(account_id)}  # collects key from tuple  
             self.account_id = account_id
             self.project_id = project_id
 
