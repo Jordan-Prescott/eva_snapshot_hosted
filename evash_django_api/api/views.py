@@ -23,7 +23,7 @@ def getData(request):
     project_id = request.GET.get('project_id', None)
     group_id = request.GET.get('group_id', None)
     region = request.GET.get('region', None)
-    customer_email = request.GET.get('email', None)
+    customer_email = request.GET.get('customer_email', None)
 
     # check params
     if account_id == None or account_id == '':
