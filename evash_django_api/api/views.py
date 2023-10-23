@@ -6,7 +6,7 @@ import zipfile
 import os
 from datetime import date
 
-from eva_snapshot.eva_snapshot import main as es
+from eva_snapshot.main import main as es
 
 
 #TODO: Need a new view for authentication
@@ -58,4 +58,6 @@ def getData(request):
     # Set the Content-Disposition header to prompt the user to download the file
     response['Content-Disposition'] = f'attachment; filename="{group_id}_{date.today()}.zip"'
     
+    #TODO: remove files in output 
+
     return response
