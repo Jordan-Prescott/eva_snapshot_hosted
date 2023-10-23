@@ -20,7 +20,7 @@ class PolyApi:
             self.url = ''
 
         self.payload = {}
-        self.headers = {"x-api-key": os.getenv('"' + account_id +'"')}  # collects key from tuple  
+        self.headers = {"x-api-key": str(os.getenv(account_id))}  # collects key from tuple  
         self.account_id = account_id
         self.project_id = project_id
 
