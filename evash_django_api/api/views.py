@@ -1,22 +1,19 @@
 from io import BytesIO
 from rest_framework.decorators import api_view
 from django.http import HttpResponse
+
 import zipfile
+import os
+from datetime import date
 
 from eva_snapshot.eva_snapshot import main as es
 
-import os
 
 #TODO: Need a new view for authentication
 
 @api_view(['GET'])
 def getData(request):
     """ ...
-
-    This should take a token and a group id.
-
-    :param token: 
-    :param group_id:
     """
     # this will return a zip file with snapshot output.
     account_id = request.GET.get('account_id', None)
@@ -36,40 +33,29 @@ def getData(request):
             return HttpResponse('Error: no region specified')
     elif customer_email == None or customer_email == '':
             return HttpResponse('Error: no customer_email specified')
+    
+    #TODO: add auth here
 
     
     # run eva snapshot script
-    es(account_id, project_id, group_id, region, customer_email)
-    
-    """
-    AUTH first of course
-
-    1. Run EVASnapshot
-    2. Collect files and zip
-    3. Send 
-    4. Remove files 
-    """
+    #es(account_id, project_id, group_id, region, customer_email)
 
 
+    buffer = BytesIO()
+    folder_path = './eva_snapshot/output/'
+    files = os.listdir(folder_path)
 
-    # buffer = BytesIO()
-    # folder_path = './eva_snapshot/output/'
-    # files = os.listdir(folder_path)
-
-    # with zipfile.ZipFile(buffer, 'w') as zipf:
-    #     for file in files:
-    #         if os.path.isfile(os.path.join(folder_path, file)):
-    #             zipf.write(os.path.join(folder_path, file), file)
+    with zipfile.ZipFile(buffer, 'w') as zipf:
+        for file in files:
+            if os.path.isfile(os.path.join(folder_path, file)):
+                zipf.write(os.path.join(folder_path, file), file)
  
-    # buffer.seek(0)
+    buffer.seek(0)
 
-    # # Create an HttpResponse with the zip file as content
-    # response = HttpResponse(buffer.read(), content_type='application/zip')
+    # Create an HttpResponse with the zip file as content
+    response = HttpResponse(buffer.read(), content_type='application/zip')
     
-    # # Set the Content-Disposition header to prompt the user to download the file
-    # #TODO: insert date in zip name
-    # response['Content-Disposition'] = 'attachment; filename="eva_snaphot.zip"'
+    # Set the Content-Disposition header to prompt the user to download the file
+    response['Content-Disposition'] = f'attachment; filename="{group_id}_{date.today()}.zip"'
     
-    # return response
-
-    return HttpResponse(f'Group id is: {group_id}')
+    return response
