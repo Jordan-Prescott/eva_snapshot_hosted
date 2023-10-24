@@ -11,7 +11,7 @@ from eva_snapshot.utils.store.data_store import DataStore
 
 PAPERTRAIL = ("logs3.papertrailapp.com", 32517)
 
-OUTPUT_FOLDER = "./output/"
+OUTPUT_FOLDER = "/output/"
 PROJECT_FOLDER = "./input/project_download"
 PROJECT_DOWNLOAD_NAME = "project_download.zip"
 
@@ -49,17 +49,17 @@ def main(account_id, project_id, group_id, region, customer_email):
     
     logger.info(f"CUSTOMER EMAIL: {customer_email}, GROUP ID: {group_id}, ACCOUNT ID: {account_id}, PROJECT ID: {project_id}")
    
-    CORE_FILES.append(f"./input/project_download/data_store/live/{group_id.lower()}/handoff")
-    CORE_FILES.append(f"./input/project_download/data_store/live/{group_id.lower()}/sms_content_map")
-    CORE_FILES.append("./input/project_download/agent_configuration/domain/variants.yaml")
-    CORE_FILES.append("./input/project_download/agent_configuration/domain/utterances.en-US.yaml")
+    CORE_FILES.append(f"./evash_django_api/eva_snapshot/input/project_download/data_store/live/{group_id.lower()}/handoff")
+    CORE_FILES.append(f"./evash_django_api/eva_snapshot/input/project_download/data_store/live/{group_id.lower()}/sms_content_map")
+    CORE_FILES.append("./evash_django_api/eva_snapshot/input/project_download/agent_configuration/domain/variants.yaml")
+    CORE_FILES.append("./evash_django_api/eva_snapshot/input/project_download/agent_configuration/domain/utterances.en-US.yaml")
 
-    api = PolyApi(region, account_id, project_id)
-    download = api.download_project()
-    files.unpack_project_download(download, PROJECT_FOLDER, PROJECT_DOWNLOAD_NAME)
+    # api = PolyApi(region, account_id, project_id)
+    # download = api.download_project()
+    # files.unpack_project_download(download, f"./{PROJECT_FOLDER}"", PROJECT_DOWNLOAD_NAME)
 
     # checks core files are found
-    for path in CORE_FILES.values():
+    for path in CORE_FILES:
         files.check_file_exists(path)
 
     store = DataStore(group_id, CORE_FILES, FILES_NOT_NEEDED)
@@ -75,7 +75,7 @@ def main(account_id, project_id, group_id, region, customer_email):
             logger.error(f"IndexError splitting location to filename: {active_flow}" )
             filename = active_flow
 
-        flow_path = f"{PROJECT_FOLDER}/agent_configuration/{location}{filename}.py"
+        flow_path = f"./evash_django_api/eva_snapshot/input/project_download/agent_configuration/{location}{filename}.py"
         with open(flow_path) as flow_file:
             code_tree = ast.parse(flow_file.read())
 
