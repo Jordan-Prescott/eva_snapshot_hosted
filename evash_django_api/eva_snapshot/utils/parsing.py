@@ -112,9 +112,14 @@ def flow_module(flow_name, ast_mod_raw: ast.Module, file_in_list: list, files_no
                                             target = i.targets[0]
                                             if "attr" in target._fields:
                                                 if target.attr == "handoff_queue_id":
-                                                    handoff_queue[
-                                                        file_in_list[transition_body.lineno - 1].strip(" ").strip("\n")
-                                                    ] = i.value.value
+                                                    try:
+                                                        handoff_queue[
+                                                            file_in_list[transition_body.lineno - 1].strip(" ").strip("\n")
+                                                        ] = i.value.value
+                                                    except AttributeError:
+                                                        handoff_queue[
+                                                            file_in_list[transition_body.lineno - 1].strip(" ").strip("\n")
+                                                        ] = i.value.args[1].value                              
 
                                                 if target.attr == "sms_content_key":
                                                     condition_sms[
