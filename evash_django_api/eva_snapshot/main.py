@@ -91,7 +91,7 @@ def main(account_id, project_id, group_id, region, customer_email):
     # generate outputs
     # Makes dir as well as copy over media files for output
     uni = UniverseGraphVizModule()
-    files.copy_files_to_dest(source_dir="./data/output_media/", target_dir=f"{OUTPUT_FOLDER}{group_id}/")
+    files.copy_files_to_dest(source_dir="./evash_django_api/eva_snapshot/data/output_media/", target_dir=f"{OUTPUT_FOLDER}{group_id}/")
     for flow in flows:
         flow_chart = GraphvizModule(flow, f"{OUTPUT_FOLDER}{group_id}/", store)
         uni.graphs.append(flow_chart.dot)
