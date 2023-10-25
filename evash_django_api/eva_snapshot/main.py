@@ -11,7 +11,7 @@ from eva_snapshot.utils.store.data_store import DataStore
 
 PAPERTRAIL = ("logs3.papertrailapp.com", 32517)
 
-OUTPUT_FOLDER = "/output/"
+OUTPUT_FOLDER = "./evash_django_api/eva_snapshot/output/"
 PROJECT_FOLDER = "./input/project_download"
 PROJECT_DOWNLOAD_NAME = "project_download.zip"
 
@@ -20,8 +20,9 @@ CORE_FILES = []
 
 # List of files that are used in the programming of EVA but not needed in output and therefore avoided.
 FILES_NOT_NEEDED = [
-    "main", "global", "handoff", "send_sms", "small_talk", "hotel_directory", "follow_up", "csat_survey",
-    "who_are_you", "csat_survey_copy"
+    "main", "global", "handoff", "send_sms", "small_talk", "hotel_directory", "follow_up", 
+    "csat_survey", "who_are_you", "csat_survey_copy", "hotel_directory", "hotel_directory_copy", 
+    "test", "admin_trigger_fallback",
 ]
 
 
