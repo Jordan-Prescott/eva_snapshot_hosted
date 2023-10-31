@@ -44,12 +44,18 @@ def getData(request):
 
     buffer = BytesIO()
     folder_path = f'./eva_snapshot/output/{group_id.lower()}/'
-    files = os.listdir(folder_path)
+    # files = os.listdir(folder_path)
+
+    # with zipfile.ZipFile(buffer, 'w') as zipf:
+    #     for file in files:
+    #         if os.path.isfile(os.path.join(folder_path, file)):
+    #             zipf.write(os.path.join(folder_path, file), file)
 
     with zipfile.ZipFile(buffer, 'w') as zipf:
-        for file in files:
-            if os.path.isfile(os.path.join(folder_path, file)):
-                zipf.write(os.path.join(folder_path, file), file)
+        for root, _, files in os.walk(folder_path):
+            for file in files:
+                file_path = os.path.join(root, file)
+                zipf.write(file_path, os.path.relpath(file_path, folder_path))
  
     buffer.seek(0)
 

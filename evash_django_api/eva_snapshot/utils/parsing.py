@@ -194,7 +194,7 @@ class UniverseGraphVizModule:
             self.universe.subgraph(graph)
 
         self.universe.render(directory=output_dir,
-                             filename="06 - EVA UNIVERSE",
+                             filename="00 - EVA UNIVERSE",
                              format="svg",
                              cleanup=True).replace('\\', '/')
 

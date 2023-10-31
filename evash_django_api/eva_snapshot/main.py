@@ -14,6 +14,9 @@ PAPERTRAIL = ("logs3.papertrailapp.com", 32517)
 # demo
 OUTPUT_FOLDER = "./eva_snapshot/output/"
 #OUTPUT_FOLDER = "./evash_django_api/eva_snapshot/output/"
+OUTPUT_FOLDER_FLOWS = f"{OUTPUT_FOLDER}flows/"
+#OUTPUT_FOLDER_FLOWS = f"{OUTPUT_FOLDER}flows/"
+
 PROJECT_FOLDER = "./eva_snapshot/input/project_download"
 PROJECT_DOWNLOAD_NAME = "project_download.zip"
 
@@ -106,11 +109,11 @@ def main(account_id, project_id, group_id, region, customer_email):
 
     # demo
     files.copy_files_to_dest(source_dir="./eva_snapshot/data/output_media/", target_dir=f"{OUTPUT_FOLDER}{group_id}/")
-
     #files.copy_files_to_dest(source_dir="./evash_django_api/eva_snapshot/data/output_media/", target_dir=f"{OUTPUT_FOLDER}{group_id}/")
+    
     for flow in flows:
-        flow_chart = GraphvizModule(flow, f"{OUTPUT_FOLDER}{group_id}/", store)
+        flow_chart = GraphvizModule(flow, f"{OUTPUT_FOLDER}{group_id}/flows/", store)
         uni.graphs.append(flow_chart.dot)
 
-    uni.build_universe(f"{OUTPUT_FOLDER}{group_id}/")
+    uni.build_universe(f"{OUTPUT_FOLDER}{group_id}/flows/")
     CORE_FILES.clear()
