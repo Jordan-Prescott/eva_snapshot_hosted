@@ -7,6 +7,7 @@ import os
 from datetime import date
 
 from eva_snapshot.main import main as es
+from eva_snapshot.utils.files import remove_folder
 
 
 #TODO: Need a new view for authentication
@@ -38,11 +39,11 @@ def getData(request):
 
     
     # run eva snapshot script
-    #es(account_id, project_id, group_id, region, customer_email)
+    es(account_id, project_id, group_id, region, customer_email)
 
 
     buffer = BytesIO()
-    folder_path = './eva_snapshot/output/'
+    folder_path = f'./eva_snapshot/output/{group_id.lower()}/'
     files = os.listdir(folder_path)
 
     with zipfile.ZipFile(buffer, 'w') as zipf:
@@ -58,6 +59,6 @@ def getData(request):
     # Set the Content-Disposition header to prompt the user to download the file
     response['Content-Disposition'] = f'attachment; filename="{group_id}_{date.today()}.zip"'
     
-    #TODO: remove files in output 
+    remove_folder(folder_path)
 
     return response
