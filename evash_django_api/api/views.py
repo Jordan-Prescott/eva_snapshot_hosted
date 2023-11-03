@@ -41,15 +41,8 @@ def getData(request):
     # run eva snapshot script
     es(account_id, project_id, group_id, region, customer_email)
 
-
     buffer = BytesIO()
     folder_path = f'./eva_snapshot/output/{group_id.lower()}/'
-    # files = os.listdir(folder_path)
-
-    # with zipfile.ZipFile(buffer, 'w') as zipf:
-    #     for file in files:
-    #         if os.path.isfile(os.path.join(folder_path, file)):
-    #             zipf.write(os.path.join(folder_path, file), file)
 
     with zipfile.ZipFile(buffer, 'w') as zipf:
         for root, _, files in os.walk(folder_path):
