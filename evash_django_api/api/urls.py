@@ -1,6 +1,7 @@
-from django.urls import path
+from django.urls import re_path
 from . import views
 
 urlpatterns = [
-    path('', views.getData),
+    re_path('auth', views.auth_token),
+    re_path('eva-snapshot', views.eva_snapshot),
 ]
