@@ -1,4 +1,11 @@
 POST http://127.0.0.1:8000/auth 
 Content-Type: application/json
+{"username": "fourteenip.salesforce", "password": "5wI:7=vKq5yY63FK8uGH6"}
 
-{"username": "jordan", "password": "test123"}
+###
+
+POST http://127.0.0.1:8000/eva-snapshot
+Content-Type: application/json
+Authorization: Token pbkdf2_sha256$600000$aKS64lNPjpS6PbqWFJggVy$RQytcjzzbc7BtCVQSC14ue+iO/mIFhGtNkb4eeu8UxU=
+
+{}

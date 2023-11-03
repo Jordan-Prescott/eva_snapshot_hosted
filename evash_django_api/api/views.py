@@ -1,5 +1,7 @@
 from io import BytesIO
 from rest_framework.decorators import api_view
+from rest_framework.response import Response
+
 from django.http import HttpResponse
 
 from .serializers import UserSerializer
@@ -20,14 +22,15 @@ from eva_snapshot.eva_snapshot import main as es
 def auth_token(request):
      user = get_object_or_404(User, username=request.data['username'])
      if not user.check_password(request.data['password']):
-          return HttpResponse({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+          return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
      token, created = Token.objects.get_or_create(user=user)
      serializer = UserSerializer(instance=user)
-     return HttpResponse({"token": token.key, "user": serializer.data})
+     print(token.key)
+     return Response({"token": token.key, "user": serializer.data})
 
-from rest_framwork.decorators import authentication_classes, permission_classes
+from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
-from rest_framwork.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated
 
 @api_view(['GET'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
@@ -35,6 +38,9 @@ from rest_framwork.permissions import IsAuthenticated
 def eva_snapshot(request):
     """ ...
     """
+    
+    return Response({"worked"})
+    
     # this will return a zip file with snapshot output.
     account_id = request.GET.get('account_id', None)
     project_id = request.GET.get('project_id', None)
