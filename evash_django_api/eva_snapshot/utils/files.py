@@ -65,11 +65,11 @@ def load_yaml_data_from_file(path) -> Dict:
     :return: Python Dict object.
     """
 
-    with open(path, 'r') as variant_data:
+    with open(path, 'r', errors='replace', encoding='utf-8') as variant_data:
         yaml_data = yaml.load(
             variant_data.read(), Loader=yaml.FullLoader
         )
-    LOGGER.info(f"load_yaml_data_from_file end.")
+    LOGGER.info(f"{path} - load_yaml_data_from_file end.")        
     return yaml_data
 
 
