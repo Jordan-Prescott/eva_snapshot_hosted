@@ -11,8 +11,13 @@ from eva_snapshot.utils.store.data_store import DataStore
 
 PAPERTRAIL = ("logs3.papertrailapp.com", 32517)
 
-OUTPUT_FOLDER = "./output/"
-PROJECT_FOLDER = "./input/project_download"
+# demo
+OUTPUT_FOLDER = "./eva_snapshot/output/"
+#OUTPUT_FOLDER = "./evash_django_api/eva_snapshot/output/"
+OUTPUT_FOLDER_FLOWS = f"{OUTPUT_FOLDER}flows/"
+#OUTPUT_FOLDER_FLOWS = f"{OUTPUT_FOLDER}flows/"
+
+PROJECT_FOLDER = "./eva_snapshot/input/project_download"
 PROJECT_DOWNLOAD_NAME = "project_download.zip"
 
 # Each file is critical to the output of the script, read README for more details. List populated in args.
@@ -20,8 +25,9 @@ CORE_FILES = []
 
 # List of files that are used in the programming of EVA but not needed in output and therefore avoided.
 FILES_NOT_NEEDED = [
-    "main", "global", "handoff", "send_sms", "small_talk", "hotel_directory", "follow_up", "csat_survey",
-    "who_are_you", "csat_survey_copy"
+    "main", "global", "handoff", "send_sms", "small_talk", "hotel_directory", "follow_up", 
+    "csat_survey", "who_are_you", "csat_survey_copy", "hotel_directory", "hotel_directory_copy", 
+    "test", "admin_trigger_fallback"
 ]
 
 
@@ -49,17 +55,17 @@ def main(account_id, project_id, group_id, region, customer_email):
     
     logger.info(f"CUSTOMER EMAIL: {customer_email}, GROUP ID: {group_id}, ACCOUNT ID: {account_id}, PROJECT ID: {project_id}")
    
-    CORE_FILES.append(f"./input/project_download/data_store/live/{group_id.lower()}/handoff")
-    CORE_FILES.append(f"./input/project_download/data_store/live/{group_id.lower()}/sms_content_map")
-    CORE_FILES.append("./input/project_download/agent_configuration/domain/variants.yaml")
-    CORE_FILES.append("./input/project_download/agent_configuration/domain/utterances.en-US.yaml")
+    CORE_FILES.append(f"./eva_snapshot/input/project_download/data_store/live/{group_id.lower()}/handoff")
+    CORE_FILES.append(f"./eva_snapshot//input/project_download/data_store/live/{group_id.lower()}/sms_content_map")
+    CORE_FILES.append("./eva_snapshot//input/project_download/agent_configuration/domain/variants.yaml")
+    CORE_FILES.append("./eva_snapshot//input/project_download/agent_configuration/domain/utterances.en-US.yaml")
 
     api = PolyApi(region, account_id, project_id)
     download = api.download_project()
-    files.unpack_project_download(download, PROJECT_FOLDER, PROJECT_DOWNLOAD_NAME)
+    files.unpack_project_download(download, f"./{PROJECT_FOLDER}", PROJECT_DOWNLOAD_NAME)
 
     # checks core files are found
-    for path in CORE_FILES.values():
+    for path in CORE_FILES:
         files.check_file_exists(path)
 
     store = DataStore(group_id, CORE_FILES, FILES_NOT_NEEDED)
@@ -75,7 +81,9 @@ def main(account_id, project_id, group_id, region, customer_email):
             logger.error(f"IndexError splitting location to filename: {active_flow}" )
             filename = active_flow
 
-        flow_path = f"{PROJECT_FOLDER}/agent_configuration/{location}{filename}.py"
+        flow_path = f"./eva_snapshot/input/project_download/agent_configuration/{location}{filename}.py"   
+
+        #flow_path = f"./evash_django_api/eva_snapshot/input/project_download/agent_configuration/{location}{filename}.py"
         with open(flow_path) as flow_file:
             code_tree = ast.parse(flow_file.read())
 
@@ -91,9 +99,12 @@ def main(account_id, project_id, group_id, region, customer_email):
     # generate outputs
     # Makes dir as well as copy over media files for output
     uni = UniverseGraphVizModule()
-    files.copy_files_to_dest(source_dir="./data/output_media/", target_dir=f"{OUTPUT_FOLDER}{group_id}/")
+
+    files.copy_files_to_dest(source_dir="./eva_snapshot/data/output_media/", target_dir=f"{OUTPUT_FOLDER}{group_id}/")
+  
     for flow in flows:
-        flow_chart = GraphvizModule(flow, f"{OUTPUT_FOLDER}{group_id}/", store)
+        flow_chart = GraphvizModule(flow, f"{OUTPUT_FOLDER}{group_id}/flows/", store)
         uni.graphs.append(flow_chart.dot)
 
-    uni.build_universe(f"{OUTPUT_FOLDER}{group_id}/")
+    uni.build_universe(f"{OUTPUT_FOLDER}{group_id}/flows/")
+    CORE_FILES.clear()

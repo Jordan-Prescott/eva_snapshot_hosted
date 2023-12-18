@@ -16,7 +16,8 @@ import zipfile
 import os
 from datetime import date
 
-from eva_snapshot.eva_snapshot import main as es
+from eva_snapshot.main import main as es
+from eva_snapshot.utils.files import remove_folder
 
 @api_view(['POST'])
 def auth_token(request):
@@ -63,13 +64,13 @@ def eva_snapshot(request):
     es(account_id, project_id, group_id, region, customer_email)
 
     buffer = BytesIO()
-    folder_path = './eva_snapshot/output/'
-    files = os.listdir(folder_path)
+    folder_path = f'./eva_snapshot/output/{group_id.lower()}/'
 
     with zipfile.ZipFile(buffer, 'w') as zipf:
-        for file in files:
-            if os.path.isfile(os.path.join(folder_path, file)):
-                zipf.write(os.path.join(folder_path, file), file)
+        for root, _, files in os.walk(folder_path):
+            for file in files:
+                file_path = os.path.join(root, file)
+                zipf.write(file_path, os.path.relpath(file_path, folder_path))
  
     buffer.seek(0)
 
@@ -79,4 +80,6 @@ def eva_snapshot(request):
     # Set the Content-Disposition header to prompt the user to download the file
     response['Content-Disposition'] = f'attachment; filename="{group_id}_{date.today()}.zip"'
     
+    remove_folder(folder_path)
+
     return response

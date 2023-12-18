@@ -112,9 +112,14 @@ def flow_module(flow_name, ast_mod_raw: ast.Module, file_in_list: list, files_no
                                             target = i.targets[0]
                                             if "attr" in target._fields:
                                                 if target.attr == "handoff_queue_id":
-                                                    handoff_queue[
-                                                        file_in_list[transition_body.lineno - 1].strip(" ").strip("\n")
-                                                    ] = i.value.value
+                                                    try:
+                                                        handoff_queue[
+                                                            file_in_list[transition_body.lineno - 1].strip(" ").strip("\n")
+                                                        ] = i.value.value
+                                                    except AttributeError:
+                                                        handoff_queue[
+                                                            file_in_list[transition_body.lineno - 1].strip(" ").strip("\n")
+                                                        ] = i.value.args[1].value                              
 
                                                 if target.attr == "sms_content_key":
                                                     condition_sms[
@@ -189,7 +194,7 @@ class UniverseGraphVizModule:
             self.universe.subgraph(graph)
 
         self.universe.render(directory=output_dir,
-                             filename="06 - EVA UNIVERSE",
+                             filename="00 - EVA UNIVERSE",
                              format="svg",
                              cleanup=True).replace('\\', '/')
 
@@ -299,10 +304,11 @@ class GraphvizModule:
                       fontcolor='white', rankdir="TB")
 
         def _text_formatter(text):
-            return re.sub("(.{35})", "\\1\\\\n", text, 0, re.DOTALL)
+            result_string = text.replace("{", "").replace("}", "")
+            return re.sub("(.{35})", "\\1\\\\n", result_string, 0, re.DOTALL)
 
         def _title_formatter(title):
-            return re.sub(r"(\w)([A-Z])", r"\1 \2", title)
+            return re.sub(r"(\w)([A-Z])", r"\1\2", title)
 
         # build nodes
         self.dot.node(f"{flow.name}_flow_node", flow.name, self.flow_node)
@@ -322,7 +328,10 @@ class GraphvizModule:
                     LOGGER.error(f"Failed to find utterance: {node.say}")
                     formatted_utt = f"[ERROR] FAILED TO FIND UTTERANCE: {node.say}"
                 else:
-                    utt = utt["text"]["default"]
+                    try:
+                        utt = utt["text"][f'if variant == "{data_store.variant.variant_id}"']   
+                    except KeyError:
+                        utt = utt["text"]["default"]
                     formatted_utt = _text_formatter(utt)
                 node_label += " | " + formatted_utt
 
@@ -464,10 +473,3 @@ class GraphvizModule:
 
         self.dot.render(directory=output_dir, filename=flow.name, format="svg", cleanup=True).replace('\\', '/')
         LOGGER.info(f"RENDERED: {flow.name}")
-
-
-
-
-
-
-
