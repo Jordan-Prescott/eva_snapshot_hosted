@@ -26,7 +26,10 @@ def unpack_project_download(download, project_folder, project_zipped) -> bool:
         file.write(download.content)
 
     with zipfile.ZipFile(project_zipped) as zip_ref:
-        zip_ref.extractall(project_folder)
+        try:
+            zip_ref.extractall(project_folder)
+        except FileNotFoundError as e:
+            LOGGER.error(e)
     os.remove(project_zipped)
 
     LOGGER.info(f"unpack_project_download end.")
