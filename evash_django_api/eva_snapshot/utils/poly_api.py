@@ -24,8 +24,6 @@ class PolyApi:
         self.account_id = account_id
         self.project_id = project_id
 
-        print(self.headers)
-
 
     def download_project(self):
         """makes GET call to PolyAI API to download project. Return files if call was successful and False if

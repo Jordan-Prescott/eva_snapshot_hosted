@@ -47,6 +47,7 @@ def eva_snapshot(request):
     region = request.GET.get('region', None)
     customer_email = request.GET.get('customer_email', None)
 
+
     # check params
     if account_id == None or account_id == '':
         return Response({"Error": "no account_id specified"}, status=status.HTTP_400_BAD_REQUEST)
