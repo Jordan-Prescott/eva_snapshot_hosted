@@ -27,7 +27,7 @@ CORE_FILES = []
 FILES_NOT_NEEDED = [
     "main", "global", "handoff", "send_sms", "small_talk", "hotel_directory", "follow_up", 
     "csat_survey", "who_are_you", "csat_survey_copy", "hotel_directory", "hotel_directory_copy", 
-    "test", "admin_trigger_fallback", "repeat"
+    "test", "admin_trigger_fallback", "repeat", "directory_titles"
 ]
 
 
