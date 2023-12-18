@@ -33,8 +33,8 @@ from rest_framework.authentication import SessionAuthentication, TokenAuthentica
 from rest_framework.permissions import IsAuthenticated
 
 @api_view(['GET'])
-@authentication_classes([SessionAuthentication, TokenAuthentication])
-@permission_classes([IsAuthenticated])
+# @authentication_classes([SessionAuthentication, TokenAuthentication])
+# @permission_classes([IsAuthenticated])
 def eva_snapshot(request):
     """ ...
     """
@@ -60,8 +60,7 @@ def eva_snapshot(request):
 
     
     # run eva snapshot script
-    #es(account_id, project_id, group_id, region, customer_email)
-
+    es(account_id, project_id, group_id, region, customer_email)
 
     buffer = BytesIO()
     folder_path = './eva_snapshot/output/'
