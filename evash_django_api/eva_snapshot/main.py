@@ -69,7 +69,6 @@ def main(account_id, project_id, group_id, region, customer_email):
         files.check_file_exists(path)
 
     FILES_NOT_NEEDED.append(group_id.lower())
-
     store = DataStore(group_id, CORE_FILES, FILES_NOT_NEEDED)
 
     flows = []
@@ -108,4 +107,7 @@ def main(account_id, project_id, group_id, region, customer_email):
         uni.graphs.append(flow_chart.dot)
 
     uni.build_universe(f"{OUTPUT_FOLDER}{group_id}/flows/")
+
+    # server clean up
     CORE_FILES.clear()
+    files.remove_folder(PROJECT_FOLDER)
