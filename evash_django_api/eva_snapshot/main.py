@@ -55,20 +55,14 @@ def main(account_id, project_id, group_id, region, customer_email):
     
     logger.info(f"CUSTOMER EMAIL: {customer_email}, GROUP ID: {group_id}, ACCOUNT ID: {account_id}, PROJECT ID: {project_id}")
    
-   # demo
     CORE_FILES.append(f"./eva_snapshot/input/project_download/data_store/live/{group_id.lower()}/handoff")
     CORE_FILES.append(f"./eva_snapshot//input/project_download/data_store/live/{group_id.lower()}/sms_content_map")
     CORE_FILES.append("./eva_snapshot//input/project_download/agent_configuration/domain/variants.yaml")
     CORE_FILES.append("./eva_snapshot//input/project_download/agent_configuration/domain/utterances.en-US.yaml")
 
-    # CORE_FILES.append(f"./evash_django_api/eva_snapshot/input/project_download/data_store/live/{group_id.lower()}/handoff")
-    # CORE_FILES.append(f"./evash_django_api/eva_snapshot/input/project_download/data_store/live/{group_id.lower()}/sms_content_map")
-    # CORE_FILES.append("./evash_django_api/eva_snapshot/input/project_download/agent_configuration/domain/variants.yaml")
-    # CORE_FILES.append("./evash_django_api/eva_snapshot/input/project_download/agent_configuration/domain/utterances.en-US.yaml")
-
-    # api = PolyApi(region, account_id, project_id)
-    # download = api.download_project()
-    # files.unpack_project_download(download, f"./{PROJECT_FOLDER}"", PROJECT_DOWNLOAD_NAME)
+    api = PolyApi(region, account_id, project_id)
+    download = api.download_project()
+    files.unpack_project_download(download, f"./{PROJECT_FOLDER}", PROJECT_DOWNLOAD_NAME)
 
     # checks core files are found
     for path in CORE_FILES:
@@ -87,7 +81,6 @@ def main(account_id, project_id, group_id, region, customer_email):
             logger.error(f"IndexError splitting location to filename: {active_flow}" )
             filename = active_flow
 
-        # demo
         flow_path = f"./eva_snapshot/input/project_download/agent_configuration/{location}{filename}.py"   
 
         #flow_path = f"./evash_django_api/eva_snapshot/input/project_download/agent_configuration/{location}{filename}.py"
@@ -107,10 +100,8 @@ def main(account_id, project_id, group_id, region, customer_email):
     # Makes dir as well as copy over media files for output
     uni = UniverseGraphVizModule()
 
-    # demo
     files.copy_files_to_dest(source_dir="./eva_snapshot/data/output_media/", target_dir=f"{OUTPUT_FOLDER}{group_id}/")
-    #files.copy_files_to_dest(source_dir="./evash_django_api/eva_snapshot/data/output_media/", target_dir=f"{OUTPUT_FOLDER}{group_id}/")
-    
+  
     for flow in flows:
         flow_chart = GraphvizModule(flow, f"{OUTPUT_FOLDER}{group_id}/flows/", store)
         uni.graphs.append(flow_chart.dot)
