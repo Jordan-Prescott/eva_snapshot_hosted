@@ -27,7 +27,7 @@ CORE_FILES = []
 FILES_NOT_NEEDED = [
     "main", "global", "handoff", "send_sms", "small_talk", "hotel_directory", "follow_up", 
     "csat_survey", "who_are_you", "csat_survey_copy", "hotel_directory", "hotel_directory_copy", 
-    "test", "admin_trigger_fallback"
+    "test", "admin_trigger_fallback", "repeat"
 ]
 
 
@@ -56,9 +56,9 @@ def main(account_id, project_id, group_id, region, customer_email):
     logger.info(f"CUSTOMER EMAIL: {customer_email}, GROUP ID: {group_id}, ACCOUNT ID: {account_id}, PROJECT ID: {project_id}")
    
     CORE_FILES.append(f"./eva_snapshot/input/project_download/data_store/live/{group_id.lower()}/handoff")
-    CORE_FILES.append(f"./eva_snapshot//input/project_download/data_store/live/{group_id.lower()}/sms_content_map")
-    CORE_FILES.append("./eva_snapshot//input/project_download/agent_configuration/domain/variants.yaml")
-    CORE_FILES.append("./eva_snapshot//input/project_download/agent_configuration/domain/utterances.en-US.yaml")
+    CORE_FILES.append(f"./eva_snapshot/input/project_download/data_store/live/{group_id.lower()}/sms_content_map")
+    CORE_FILES.append("./eva_snapshot/input/project_download/agent_configuration/domain/variants.yaml")
+    CORE_FILES.append("./eva_snapshot/input/project_download/agent_configuration/domain/utterances.en-US.yaml")
 
     api = PolyApi(region, account_id, project_id)
     download = api.download_project()
@@ -67,6 +67,8 @@ def main(account_id, project_id, group_id, region, customer_email):
     # checks core files are found
     for path in CORE_FILES:
         files.check_file_exists(path)
+
+    FILES_NOT_NEEDED.append(group_id.lower())
 
     store = DataStore(group_id, CORE_FILES, FILES_NOT_NEEDED)
 
@@ -83,7 +85,6 @@ def main(account_id, project_id, group_id, region, customer_email):
 
         flow_path = f"./eva_snapshot/input/project_download/agent_configuration/{location}{filename}.py"   
 
-        #flow_path = f"./evash_django_api/eva_snapshot/input/project_download/agent_configuration/{location}{filename}.py"
         with open(flow_path) as flow_file:
             code_tree = ast.parse(flow_file.read())
 
