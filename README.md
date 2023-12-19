@@ -6,9 +6,8 @@ EVA Visualization API is a Python-Django based API for generating visualizations
 ## Features
 - **Conversational AI Visualization**: Dynamic representations of EVA's interactions with guests.
 - **Secure Authentication**: Access restricted to authorized users, ensuring data security.
-- **Customizable Visual Output**: Allows users to tailor the visualization parameters.
+- **Customizable Visual Output**: Allows users to request specific site visualization.
 - **High-Performance Backend**: Built on Django for efficient and scalable request handling.
-- **Detailed Logging**: Comprehensive logs for effective monitoring and troubleshooting.
 
 ## Getting Started
 
@@ -18,13 +17,13 @@ EVA Visualization API is a Python-Django based API for generating visualizations
 
 ### Installation
 1. Clone the repository:
-'''git clone [repository URL]'''
+```git clone [repository URL]```
 2. install dependencies:
-'''pip install -r requirements.txt'''
+```pip install -r requirements.txt```
 
 ### Usage
 1. Start the Django server:
-'''python manage.py runserver'''
+```python manage.py runserver```
 2. Access the API endpoints:
 - Authentication: `http://localhost:8000/auth`
 - Visualization: `http://localhost:8000/eva-snapshot?{parameters}`
