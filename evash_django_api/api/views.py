@@ -65,7 +65,7 @@ def eva_snapshot(request):
     es(account_id, project_id, group_id, region, customer_email)
 
     buffer = BytesIO()
-    folder_path = f'./eva_snapshot/output/{group_id.lower()}/'
+    folder_path = f'./eva_snapshot/output/{group_id}/'
 
     with zipfile.ZipFile(buffer, 'w') as zipf:
         for root, _, files in os.walk(folder_path):
