@@ -1,14 +1,17 @@
 import requests
 import logging
-import json
-import os
 
-# from eva_snapshot.utils.exceptions import *
+from decouple import config
+
+from eva_snapshot.utils.exceptions import *
+from eva_snapshot.utils.formatting import uppercase_and_underscores
 
 LOGGER = logging.getLogger("EVASnapshot v2")
 
 
 class PolyApi:
+    
+    
     def __init__(self, region, account_id, project_id) -> None:
         """Api object used to make REST based calls to PolyAI's API.
 
@@ -19,8 +22,10 @@ class PolyApi:
         if region == 'EU':
             self.url = ''
 
+        self.api_key = config(uppercase_and_underscores(account_id), default='')
+
         self.payload = {}
-        self.headers = {"x-api-key": str(os.getenv(account_id))}  # collects key from tuple  
+        self.headers = {"x-api-key": self.api_key} 
         self.account_id = account_id
         self.project_id = project_id
 
