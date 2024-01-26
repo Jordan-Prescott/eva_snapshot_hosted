@@ -34,12 +34,11 @@ from rest_framework.authentication import SessionAuthentication, TokenAuthentica
 from rest_framework.permissions import IsAuthenticated
 
 @api_view(['GET'])
-# @authentication_classes([SessionAuthentication, TokenAuthentication])
-# @permission_classes([IsAuthenticated])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def eva_snapshot(request):
     """ ...
     """
-    
     # this will return a zip file with snapshot output.
     account_id = request.GET.get('account_id', None)
     project_id = request.GET.get('project_id', None)
